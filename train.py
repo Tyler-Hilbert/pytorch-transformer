@@ -1,27 +1,24 @@
-from model import build_transformer
-from dataset import BilingualDataset, causal_mask
+# User defined imports
 from config import get_config, get_weights_file_path, latest_weights_file_path
-
-import torchtext.datasets as datasets
+from dataset import BilingualDataset, causal_mask
+from model import build_transformer
+# Torch imports
 import torch
+import torchmetrics
 import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader, random_split
-from torch.optim.lr_scheduler import LambdaLR
-
-import warnings
-from tqdm import tqdm
-import os
-from pathlib import Path
-
-# Huggingface datasets and tokenizers
+from torch.utils.data import DataLoader, random_split
+from torch.utils.tensorboard import SummaryWriter
+# Huggingface datasets and tokenizers imports
 from datasets import load_dataset
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
 from tokenizers.trainers import WordLevelTrainer
 from tokenizers.pre_tokenizers import Whitespace
-
-import torchmetrics
-from torch.utils.tensorboard import SummaryWriter
+# Other imports
+import os
+from pathlib import Path
+from tqdm import tqdm
+import warnings
 
 def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device):
     sos_idx = tokenizer_tgt.token_to_id('[SOS]')
@@ -52,7 +49,6 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
             break
 
     return decoder_input.squeeze(0)
-
 
 def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len, device, print_msg, global_step, writer, num_examples=2):
     model.eval()
