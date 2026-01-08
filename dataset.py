@@ -31,9 +31,9 @@ class BilingualDataset(Dataset):
         dec_input_tokens = self.tokenizer_tgt.encode(tgt_text).ids
 
         # Add sos, eos and padding to each sentence
-        enc_num_padding_tokens = self.seq_len - len(enc_input_tokens) - 2  # We will add <s> and </s>
-        # We will only add <s>, and </s> only on the label
-        dec_num_padding_tokens = self.seq_len - len(dec_input_tokens) - 1
+        enc_num_padding_tokens = self.seq_len - len(enc_input_tokens) - 2  # Add <s> and </s>
+        # Add <s> only to decoder and </s> only to the label, instead of adding <s> and </s> to both the decoder and label
+        dec_num_padding_tokens = self.seq_len - len(dec_input_tokens) - 1  # Add <s>
 
         # Make sure the number of padding tokens is not negative. If it is, the sentence is too long
         if enc_num_padding_tokens < 0 or dec_num_padding_tokens < 0:
